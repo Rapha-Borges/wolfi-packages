@@ -5,7 +5,7 @@ contents:
     - https://packages.wolfi.dev/os
   packages:
     - wolfi-base
-    - myk9s
+    - mycurl
 
 archs:
   - aach64
@@ -20,4 +20,4 @@ accounts:
   run-as: 65532
 
 entrypoint:
-  command: /usr/bin/k9s
+  command: /usr/bin/curl

@@ -25,7 +25,7 @@ docker load -i myk9s.tar
 4. Run the image
 
 ```bash
-docker run -it myk9s:test-arm64 k9s version
+docker run -it myk9s:test-arm64 version
 ```
 
 ## Scan the image with grype and compare the results with the original image

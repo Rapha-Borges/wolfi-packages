@@ -1,1 +1,7 @@
 melange.rsa*
+*.tar
+sbom*
+
+# Directorys
+
+packages/
