@@ -1,0 +1,32 @@
+package:
+  name: mytrivy
+  version: 0.58.1
+  epoch: 0
+  description: Find vulnerabilities, misconfigurations, secrets, SBOM in containers, Kubernetes, code repositories, clouds and more
+  copyright:
+    - license: Apache-2.0
+
+pipeline:
+  - uses: git-checkout
+    with:
+      expected-commit: 7326db14af3d24ab2c62e835361b7bedcacb8de1
+      repository: https://github.com/aquasecurity/trivy
+      tag: v${{package.version}}
+
+  - uses: go/build
+    with:
+      output: trivy
+      packages: ./cmd/trivy
+      ldflags: -X github.com/aquasecurity/trivy/pkg/version/app.ver=${{package.version}}
+
+update:
+  enabled: true
+  github:
+    identifier: aquasecurity/trivy
+    strip-prefix: v
+
+test:
+  pipeline:
+    - name: "Verify Installation"
+      runs: |
+        trivy --version
