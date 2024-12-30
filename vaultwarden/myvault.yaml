@@ -1,0 +1,75 @@
+package:
+  name: myvault
+  version: 1.32.7
+  epoch: 1
+  description: Unofficial Bitwarden compatible server written in Rust, formerly known as bitwarden_rs
+  copyright:
+    - license: AGPL-3.0 license
+
+environment:
+  contents:
+    packages:
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - openssf-compiler-options
+      - rust
+      - curl
+      - openssl
+      - tzdata
+      - rustup
+      - openssl-dev
+      - postgresql-dev
+      - mysql-dev
+      - sqlite-dev
+      - git
+      - npm
+      - make
+      - docker
+  environment:
+    CARGO_PROFILE: "release"
+    DB: sqlite,mysql,postgresql,enable_mimalloc
+    DEBIAN_FRONTEND: noninteractive
+    LANG: C.UTF-8
+    TZ: UTC
+    TERM: xterm-256color
+    CARGO_HOME: "/root/.cargo"
+    USER: root
+    ROCKET_PROFILE: "release"
+    ROCKET_ADDRESS: 0.0.0.0
+    ROCKET_PORT: 80
+    SSL_CERT_DIR: /etc/ssl/certs
+
+pipeline:
+  - uses: git-checkout
+    with:
+      repository: https://github.com/dani-garcia/vaultwarden
+      tag: ${{package.version}}
+      expected-commit: a523c82f5f9fc444cafb11b78a16074663e76a7a
+  
+  - uses: git-checkout
+    with:
+      repository: https://github.com/dani-garcia/bw_web_builds.git
+      tag: v2024.6.2c
+      expected-commit: bfa7310c2955e0365dc0bbc18771451443e5362b
+
+  - runs: |
+      cargo build --features "${DB}" --profile "${CARGO_PROFILE}"
+      mkdir -p ${{targets.destdir}}/usr/bin/
+      ls target/release/
+      mv target/release/vaultwarden ${{targets.destdir}}/usr/bin/
+      cd bw_web_builds
+      make docker-extract
+      make full
+
+  - uses: strip
+
+test:
+  pipeline:
+    - runs: |
+        --version
+
+update:
+  enabled: true
+  github:
+    identifier: dani-garcia/vaultwarden

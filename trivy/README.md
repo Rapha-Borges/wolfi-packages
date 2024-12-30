@@ -27,20 +27,3 @@ docker load -i mytrivy.tar
 ```bash
 docker run -it mytrivy:test-arm64 version
 ```
-
-## Scan the image with grype and compare the results with the original image
-
-```bash
-grype myk9s:test-arm64
-grype quay.io/derailed/k9s
-```
-
-## Results
-
-Note that the myk9s image has no vulnerabilities.
-
-![myk9s](myk9s.png)
-
-![k9s](k9s.png)
-
-
