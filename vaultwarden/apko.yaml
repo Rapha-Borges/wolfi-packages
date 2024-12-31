@@ -8,7 +8,7 @@ contents:
     - myvault
 
 archs:
-  - aach64
+  - x86_64
 
 accounts:
   groups:

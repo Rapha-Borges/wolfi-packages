@@ -47,20 +47,10 @@ pipeline:
       tag: ${{package.version}}
       expected-commit: a523c82f5f9fc444cafb11b78a16074663e76a7a
   
-  - uses: git-checkout
-    with:
-      repository: https://github.com/dani-garcia/bw_web_builds.git
-      tag: v2024.6.2c
-      expected-commit: bfa7310c2955e0365dc0bbc18771451443e5362b
-
   - runs: |
       cargo build --features "${DB}" --profile "${CARGO_PROFILE}"
       mkdir -p ${{targets.destdir}}/usr/bin/
-      ls target/release/
       mv target/release/vaultwarden ${{targets.destdir}}/usr/bin/
-      cd bw_web_builds
-      make docker-extract
-      make full
 
   - uses: strip
 
